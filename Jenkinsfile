@@ -32,7 +32,7 @@ pipeline {
 
         stage('Security Gate') {
             steps {
-                bat '"%PYTHON_EXE%" -c "from app.scanner import scan_directory; findings = scan_directory(); print(f\"Security Gate completed: {len(findings)} findings reviewed\")"'
+                bat '''"%PYTHON_EXE%" -c "from app.scanner import scan_directory; print('Security Gate completed: ' + str(len(scan_directory())) + ' findings reviewed')"'''
             }
         }
     }
