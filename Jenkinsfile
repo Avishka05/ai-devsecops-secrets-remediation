@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    environment {
+        PYTHON_EXE = 'C:\\Users\\Avishka\\Documents\\ai-devsecops-secrets-remediation\\.venv\\Scripts\\python.exe'
+    }
+
     stages {
         stage('Checkout') {
             steps {
@@ -10,25 +14,25 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                bat 'python -m pip install -r requirements.txt'
+                bat '"%PYTHON_EXE%" -m pip install -r requirements.txt'
             }
         }
 
         stage('Baseline Secret Scan') {
             steps {
-                bat 'python -c "from app.scanner import scan_directory; print(scan_directory())"'
+                bat '"%PYTHON_EXE%" -c "from app.scanner import scan_directory; print(scan_directory())"'
             }
         }
 
         stage('AI Contextual Analysis') {
             steps {
-                bat 'python -c "from app.scanner import scan_directory; from app.ai_remediator import analyze_finding; [print(analyze_finding(item)) for item in scan_directory()]"'
+                bat '"%PYTHON_EXE%" -c "from app.scanner import scan_directory; from app.ai_remediator import analyze_finding; [print(analyze_finding(item)) for item in scan_directory()]"'
             }
         }
 
         stage('Security Gate') {
             steps {
-                bat 'python -c "from app.scanner import scan_directory; findings = scan_directory(); print(f\"Security Gate completed: {len(findings)} findings reviewed\")"'
+                bat '"%PYTHON_EXE%" -c "from app.scanner import scan_directory; findings = scan_directory(); print(f\"Security Gate completed: {len(findings)} findings reviewed\")"'
             }
         }
     }
