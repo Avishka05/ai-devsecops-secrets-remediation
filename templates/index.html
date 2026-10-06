@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI DevSecOps Security Dashboard</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0b1220;
+      color: #e5e7eb;
+    }
+
+    .container {
+      width: min(1150px, 92%);
+      margin: auto;
+      padding: 36px 0 60px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      align-items: flex-start;
+      margin-bottom: 26px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 30px;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: #94a3b8;
+      line-height: 1.5;
+    }
+
+    .badge {
+      white-space: nowrap;
+      background: #052e16;
+      color: #86efac;
+      border: 1px solid #166534;
+      padding: 9px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+    }
+
+    .summary {
+      background: linear-gradient(135deg, #172554, #1e293b);
+      border: 1px solid #334155;
+      border-radius: 14px;
+      padding: 22px;
+      margin-bottom: 28px;
+    }
+
+    .summary-number {
+      color: #fbbf24;
+      font-size: 32px;
+      font-weight: bold;
+    }
+
+    .summary p {
+      margin: 7px 0 0;
+      color: #cbd5e1;
+    }
+
+    .section-title {
+      margin: 30px 0 10px;
+      font-size: 20px;
+    }
+
+    .section-description {
+      margin: 0 0 20px;
+      color: #94a3b8;
+    }
+
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      background: #111827;
+      border-radius: 12px;
+      padding: 20px;
+      border: 1px solid #273449;
+    }
+
+    .baseline {
+      border-top: 4px solid #64748b;
+    }
+
+    .ai-enhanced {
+      border-top: 4px solid #22c55e;
+    }
+
+    .card h3 {
+      margin: 0 0 16px;
+      font-size: 17px;
+    }
+
+    .label {
+      color: #94a3b8;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      margin-top: 14px;
+    }
+
+    .value {
+      margin: 5px 0 0;
+      line-height: 1.5;
+    }
+
+    code {
+      color: #fbbf24;
+      font-size: 13px;
+      overflow-wrap: anywhere;
+    }
+
+    .severity {
+      display: inline-block;
+      background: #7f1d1d;
+      color: #fecaca;
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .source {
+      margin-top: 15px;
+      color: #86efac;
+      font-size: 12px;
+    }
+
+    .footer-note {
+      margin-top: 32px;
+      padding: 16px;
+      background: #172554;
+      border-radius: 10px;
+      color: #bfdbfe;
+      line-height: 1.5;
+      font-size: 14px;
+    }
+
+    @media (max-width: 750px) {
+      .header {
+        flex-direction: column;
+      }
+
+      .comparison-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="container">
+    <section class="header">
+      <div>
+        <h1>AI-Enhanced DevSecOps Security Dashboard</h1>
+        <p class="subtitle">
+          Automated secret detection with redaction-first, context-aware remediation.
+        </p>
+      </div>
+      <span class="badge">CI/CD Security Gate</span>
+    </section>
+
+    <section class="summary">
+      <div class="summary-number">{{ total }}</div>
+      <p>Potential secret finding(s) detected in the current source-code scan.</p>
+    </section>
+
+    <h2 class="section-title">Baseline vs AI-Enhanced Workflow</h2>
+    <p class="section-description">
+      The left panel shows conventional rule-based scanning. The right panel shows
+      how AI makes the same finding easier and faster for a developer to remediate.
+    </p>
+
+    {% for item in findings %}
+    <section class="comparison-grid">
+      <article class="card baseline">
+        <h3>Without AI — Scanner Output</h3>
+
+        <div class="label">Detected Rule</div>
+        <p class="value">{{ item.rule }}</p>
+
+        <div class="label">Location</div>
+        <p class="value"><code>{{ item.file }} : line {{ item.line }}</code></p>
+
+        <div class="label">Outcome</div>
+        <p class="value">
+          Pattern detected. The developer must manually understand the severity,
+          business impact, and remediation.
+        </p>
+      </article>
+
+      <article class="card ai-enhanced">
+        <h3>With AI — Context-Aware Remediation</h3>
+
+        <span class="severity">{{ item.severity }}</span>
+
+        <div class="label">AI Risk Analysis</div>
+        <p class="value">{{ item.explanation }}</p>
+
+        <div class="label">Recommended Remediation</div>
+        <p class="value">{{ item.remediation }}</p>
+
+        <p class="source">Analysis source: {{ item.source }}</p>
+      </article>
+    </section>
+    <br>
+    {% endfor %}
+
+    <section class="footer-note">
+      <strong>Privacy-by-design:</strong> the scanner sends Gemini only the finding
+      type, filename, and line number. Detected values remain redacted and are never
+      included in the AI prompt.
+    </section>
+  </main>
+</body>
+</html>
